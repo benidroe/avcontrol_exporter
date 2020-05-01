@@ -15,7 +15,8 @@ Visit http://localhost:2113/control?target=devicename.localnetwork where devicen
 ## Enable avcontrol on your control system
 All you have to do is sending a simple UDP message to port 2114.
 
-These messages are still available, yet. Place it  to the appropriate place in your control logic.
+Here is a list of messages available. Place it  to the appropriate place in your control logic.
+Every message must be terminated with \n
 
 ```
 # system power state
@@ -28,7 +29,7 @@ system.power.state=3	# system is in shutdown
 system.init=1           # system is initialized. This sets a timestamp in the database an calculates the uptime
 
 # nightly shutdown
-system.power.nightly=1  # system is running a nightly shutdown. This sets a timestamp in the database. Result is 1 for 5 minutes
+system.power.nightly=1  # system is running a nightly shutdown. This sets a timestamp in the database. Result will be 1 for 5 minutes
 
 # emergency shutdown from fire detection unit
 system.firealarm.state=1 # ok
@@ -64,7 +65,7 @@ video.input.select.[target]=9	# doc cam
 video.input.select.[target]=10	# local computer
 ...
 video.input.select.[target]=n	# something else, specified for your institution
-## It's recommendet to set up your custom number->input convention, suitable for your application.
+## It's recommended to set up your custom number->input convention, suitable for your application.
 ## [target] is the name of the target device (e.g. a part of the dns-name, like projector-2) where your input selection is displayed. In regard to video matrixes, multible targets can be specified.
 
 ```
