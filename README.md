@@ -7,7 +7,7 @@ The only requirement is to push UDP messages with state codes from the system to
 ## Usage
 
 ```sh
-./pjlink_exporter
+./avcontrol_exporter
 ```
 
 Visit http://localhost:2113/control?target=devicename.localnetwork where devicename.localnetwork is the DNS-Name of the control system.
@@ -26,7 +26,7 @@ system.power.state=2    # system is booting
 system.power.state=3	# system is in shutdown
 
 # system initialized
-system.init=1           # system is initialized. This sets a timestamp in the database an calculates the uptime
+system.init=1           # system is initialized. This sets a timestamp in the database and calculates the uptime
 
 # nightly shutdown
 system.power.nightly=1  # system is running a nightly shutdown. This sets a timestamp in the database. Result will be 1 for 5 minutes
