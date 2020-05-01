@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-func getHostFromIp(ip string) string{
+func getHostFromIp(ip string) string {
 	ip = strings.Split(ip, ":")[0]
 	addr, err := net.LookupAddr(ip)
 	if err != nil {
@@ -22,29 +22,29 @@ func getHostFromIp(ip string) string{
 	return addr[0]
 }
 
-var knownMsgClasses = []string{	// List of known Classes, identified by regex
+var knownMsgClasses = []string{ // List of known Classes, identified by regex
 	`system.power.state`,
 	`system.init`,
 	`system.power.nightly`,
 	`system.firealarm.state`,
 	`system.touchpanel.page`,
 	`system.connected.[a-z0-9-.]+`,
-	`image.input.select.[a-z0-9-.]+`,
-
+	`video.input.select.[a-z0-9-.]+`,
 }
 
 func parseMessage(msg []byte) (string, int, error) {
 
-	parts := strings.Split(strings.ToLower(string(bytes.Trim(msg, "\x00"))), "=")			// Remove nil-Characters from []byte-Message and convert to string and lower string and split msgClass from msgValue
+	parts := strings.Split(strings.ToLower(string(bytes.Trim(msg, "\x00"))), "=") // Remove nil-Characters from []byte-Message and convert to string and lower string and split msgClass from msgValue
 	msgClass := parts[0]
+	if len(parts) < 2 {
+		return "0", 0, errors.New("Message value not found")
+	}
 	msgValue, err := strconv.Atoi(strings.TrimSpace(parts[1]))
-	if err != nil{
-		return "0", 0, err;
+	if err != nil {
+		return "0", 0, err
 	}
 
 	// Check that the message contains a valid metric
-
-
 
 	for _, re := range knownMsgClasses {
 
@@ -59,18 +59,21 @@ func parseMessage(msg []byte) (string, int, error) {
 				msgValue = int(time.Now().Unix())
 			}
 
+			// Is it a init command?
+			res, _ = regexp.MatchString(`system.power.nightly`, msgClass)
+			if res {
+				msgValue = int(time.Now().Unix())
+			}
+
 			return msgClass, msgValue, nil
 		}
 
 	}
 
-
 	fmt.Println(msgClass, msgValue)
 
-
-	return "0" , 0 , errors.New("Message Class not found")
+	return "0", 0, errors.New("Message Class not found")
 }
-
 
 func UdpServer(ctx context.Context, address string, redisClient *redis.Client) (err error) {
 
@@ -85,7 +88,7 @@ func UdpServer(ctx context.Context, address string, redisClient *redis.Client) (
 	defer pc.Close()
 
 	doneChan := make(chan error, 1)
-	buffer := make([]byte, 1024)	// 1024 is the max buffer size
+	buffer := make([]byte, 1024) // 1024 is the max buffer size
 
 	fmt.Println("Start Server")
 
@@ -109,6 +112,14 @@ func UdpServer(ctx context.Context, address string, redisClient *redis.Client) (
 
 			msg, val, err := parseMessage(buffer[:n])
 
+			/* Todo: Reset values on init
+			if msg == "system.init"{  // reset values on init
+				err := redisClient.HSet(host , msg, val).Err()
+				if err != nil {
+					panic(err)
+				}
+			}
+			*/
 
 			resp := "ACK"
 			if err != nil {
@@ -116,7 +127,7 @@ func UdpServer(ctx context.Context, address string, redisClient *redis.Client) (
 				resp = "ERR"
 			} else {
 
-				err := redisClient.HSet(host , msg, val).Err()
+				err := redisClient.HSet(host, msg, val).Err()
 				if err != nil {
 					panic(err)
 				}
@@ -142,5 +153,3 @@ func UdpServer(ctx context.Context, address string, redisClient *redis.Client) (
 	return
 
 }
-
-
