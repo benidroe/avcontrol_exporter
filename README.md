@@ -4,10 +4,17 @@ AV control system state exporter for Prometheus
 This exporter collects engaged system state data from av control systems. This enables simple state monitoring of av systems, e.g. from extron or crestron.
 The only requirement is to push UDP messages with state codes from the system to this exporters engage port.
 
+The engaged data is cached within a redis database.
+
 ## Usage
 
 ```sh
 ./avcontrol_exporter
+```
+
+Regulary, you should specify your redis host,  password, and database.
+```sh
+./avcontrol_exporter --redis.address=redishost:6379 --redis.password=my-pass --redis.db=0
 ```
 
 Visit http://localhost:2113/control?target=devicename.localnetwork where devicename.localnetwork is the DNS-Name of the control system.
