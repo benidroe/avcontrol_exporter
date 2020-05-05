@@ -19,7 +19,7 @@ func getHostFromIp(ip string) string {
 	if err != nil {
 		return ip
 	}
-	return addr[0]
+	return strings.TrimSuffix(addr[0], ".")
 }
 
 var knownMsgClasses = []string{ // List of known Classes, identified by regex
