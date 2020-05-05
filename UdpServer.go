@@ -103,12 +103,11 @@ func UdpServer(ctx context.Context, address string, redisClient *redis.Client) (
 				return
 			}
 
-			fmt.Printf("packet-received: bytes=%d msg=%s\n",
-				n, buffer)
+			// fmt.Printf("packet-received: bytes=%d msg=%s\n", n, buffer)
 
 			host := getHostFromIp(addr.String())
 
-			fmt.Println("Host:", host)
+			//fmt.Println("Host:", host)
 
 			msg, val, err := parseMessage(buffer[:n])
 
