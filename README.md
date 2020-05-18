@@ -76,3 +76,21 @@ video.input.select.[target]=n	# something else, specified for your institution
 ## [target] is the name of the target device (e.g. a part of the dns-name, like projector-2) where your input selection is displayed. In regard to video matrixes, multible targets can be specified.
 
 ```
+
+### Prometheus Config
+```
+ - job_name: 'avcontrol'
+    static_configs:
+      - targets:
+          - o25-h1-strg.mt.uni-ulm.de
+    metrics_path: /control
+    params:
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 127.0.0.1:2113  # The avcontrol exporter's real hostname:port.
+
+```
