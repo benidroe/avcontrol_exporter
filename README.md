@@ -26,6 +26,10 @@ Here is a list of messages available. Place it  to the appropriate place in your
 Every message must be terminated with \n
 
 ```
+### Driver internal services:
+# keepalive (send every 15sec.)
+system.keepalive = 1 # this should not be a action in GCP.
+
 # system power state
 system.power.state=0	# system is off
 system.power.state=1	# system is on
@@ -59,20 +63,34 @@ system.connected.[device]=1 # device is connected
 ## It's recommended to set a monitior for every device checking it's connection state in your control logic.
 
 # video input selection
-video.input.select.[target]=0	# no input
-video.input.select.[target]=1	# vga
-video.input.select.[target]=2	# hdmi1
-video.input.select.[target]=3	# hdmi2
-video.input.select.[target]=4	# display port
-video.input.select.[target]=5	# sdi1
-video.input.select.[target]=6	# sdi2
-video.input.select.[target]=7	# fbas1
-video.input.select.[target]=8	# fbas2
-video.input.select.[target]=9	# doc cam
-video.input.select.[target]=10	# local computer
-...
-video.input.select.[target]=n	# something else, specified for your institution
-## It's recommended to set up your custom number->input convention, suitable for your application.
+video.input.select.[target]=0 # no input
+video.input.select.[target]=1 # vga 1
+video.input.select.[target]=2 # vga 2
+video.input.select.[target]=3 # vga 3
+video.input.select.[target]=4 # vga 4
+video.input.select.[target]=5 # vga 5
+video.input.select.[target]=6 # hdmi 1
+video.input.select.[target]=7 # hdmi 2
+video.input.select.[target]=8 # hdmi 3
+video.input.select.[target]=9 # hdmi 4
+video.input.select.[target]=10 # hdmi 5
+video.input.select.[target]=11 # Digital 1
+video.input.select.[target]=12 # Digital 2
+video.input.select.[target]=13 # Digital 3
+video.input.select.[target]=14 # Digital 4
+video.input.select.[target]=15 # Digital 5
+video.input.select.[target]=16 # SDI 1
+video.input.select.[target]=17 # SDI 2
+video.input.select.[target]=18 # SDI 3
+video.input.select.[target]=19 # SDI 4
+video.input.select.[target]=20 # SDI 5
+video.input.select.[target]=21 # TV-Receiver
+video.input.select.[target]=22 # IPTV
+video.input.select.[target]=23 # Doc Cam
+video.input.select.[target]=24 # PTZ CAM
+video.input.select.[target]=25 # PC
+video.input.select.[target]=26 # auto
+## [target] ist a String. E.g. the Display-Name oder the dns-name or the IP.
 ## [target] is the name of the target device (e.g. a part of the dns-name, like projector-2) where your input selection is displayed. In regard to video matrixes, multible targets can be specified.
 
 ```
