@@ -51,7 +51,7 @@ func (c collector) Collect(ch chan<- prometheus.Metric) {
 
 	// Todo: walkpjlink(c.target, c.pass, &pjSlice, c.logger)
 
-	keys, err := c.redisClient.HGetAll(c.target).Result()
+	keys, err := c.redisClient.HGetAll(c.ctx, c.target).Result()
 	if err != nil {
 		panic(err)
 	}
@@ -83,6 +83,16 @@ func (c collector) Collect(ch chan<- prometheus.Metric) {
 
 			ch <- prometheus.MustNewConstMetric(
 				prometheus.NewDesc("avcontrol_system_power_nightly", "system nightly shutdown running", nil, nil),
+				prometheus.GaugeValue, float64(result))
+
+		case matchString(`system.keepalive`, key, c.logger):
+			result := 0
+			if ival+20 > int(time.Now().Unix()) { // check if last keepalive message was received within the last 20 seconds.
+				result = 1
+			}
+
+			ch <- prometheus.MustNewConstMetric(
+				prometheus.NewDesc("avcontrol_system_keepalive", "system is currently running", nil, nil),
 				prometheus.GaugeValue, float64(result))
 
 		case matchString(`system.firealarm.state`, key, c.logger):

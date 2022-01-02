@@ -30,6 +30,7 @@ var knownMsgClasses = []string{ // List of known Classes, identified by regex
 	`system.touchpanel.page`,
 	`system.connected.[a-z0-9-.]+`,
 	`video.input.select.[a-z0-9-.]+`,
+	`system.keepalive`,
 }
 
 func parseMessage(msg []byte) (string, int, error) {
@@ -59,8 +60,14 @@ func parseMessage(msg []byte) (string, int, error) {
 				msgValue = int(time.Now().Unix())
 			}
 
-			// Is it a init command?
+			// Is it a nightly power shutdown command?
 			res, _ = regexp.MatchString(`system.power.nightly`, msgClass)
+			if res {
+				msgValue = int(time.Now().Unix())
+			}
+
+			// Is it a keep alive command?
+			res, _ = regexp.MatchString(`system.keepalive`, msgClass)
 			if res {
 				msgValue = int(time.Now().Unix())
 			}
@@ -126,10 +133,12 @@ func UdpServer(ctx context.Context, address string, redisClient *redis.Client) (
 				resp = "ERR"
 			} else {
 
-				err := redisClient.HSet(host, msg, val).Err()
+				err := redisClient.HSet(ctx, host, msg, val).Err()
 				if err != nil {
 					panic(err)
 				}
+
+				fmt.Println("Written", host, msg, val)
 
 			}
 
