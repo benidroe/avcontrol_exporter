@@ -14,7 +14,7 @@ The engaged data is cached within a redis database.
 
 Regulary, you should specify your redis host,  password, and database.
 ```sh
-./avcontrol_exporter --redis.address=redishost:6379 --redis.password=my-pass --redis.db=0
+./avcontrol_exporter --redis.address=redishost:6379 --redis.password=mycanarypass --redis.db=0
 ```
 
 Visit http://localhost:2113/control?target=devicename.localnetwork where devicename.localnetwork is the DNS-Name of the control system.
@@ -100,7 +100,7 @@ video.input.select.[target]=26 # auto
  - job_name: 'avcontrol'
     static_configs:
       - targets:
-          - o25-h1-strg.mt.uni-ulm.de
+          - ´lecturehall-1-controlprocessor.mycanarynetwork.tld
     metrics_path: /control
     params:
     relabel_configs:
