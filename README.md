@@ -28,7 +28,7 @@ Every message must be terminated with \n
 ```
 ### Driver internal services:
 # keepalive (send every 15sec.)
-system.keepalive = 1 # this should not be a action in GCP.
+system.keepalive = 1
 
 # system power state
 system.power.state=0	# system is off
