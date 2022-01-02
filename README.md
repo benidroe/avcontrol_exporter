@@ -100,7 +100,7 @@ video.input.select.[target]=26 # auto
  - job_name: 'avcontrol'
     static_configs:
       - targets:
-          - ´lecturehall-1-controlprocessor.mycanarynetwork.tld
+          - lecturehall-1-controlprocessor.mycanarynetwork.tld
     metrics_path: /control
     params:
     relabel_configs:
