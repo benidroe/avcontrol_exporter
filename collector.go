@@ -53,8 +53,18 @@ func (c collector) Collect(ch chan<- prometheus.Metric) {
 
 	keys, err := c.redisClient.HGetAll(c.ctx, c.target).Result()
 	if err != nil {
-		panic(err)
+		// set redis error state and continue
+		ch <- prometheus.MustNewConstMetric(
+			prometheus.NewDesc("avcontrol_redis_connection", "avcontrol redis connection", nil, nil),
+			prometheus.GaugeValue, float64(0))
+		level.Debug(c.logger).Log("collector", "Cannot read from RedisDB")
+		return
+
 	}
+
+	ch <- prometheus.MustNewConstMetric(
+		prometheus.NewDesc("avcontrol_redis_connection", "avcontrol redis connection", nil, nil),
+		prometheus.GaugeValue, float64(1))
 
 	level.Debug(c.logger).Log("collector", "here")
 
