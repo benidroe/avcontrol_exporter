@@ -18,30 +18,27 @@ import (
 )
 import "github.com/go-redis/redis"
 
-
-
 func RedisNewClient() *redis.Client {
 
 	db, _ := strconv.Atoi(*redisDB)
 	client := redis.NewClient(&redis.Options{
 		Addr:     *redisAddress,
 		Password: *redisPassword, // no password
-		DB:       db,  // use default DB
+		DB:       db,             // use default DB
 	})
-
 
 	return client
 
 }
 
 var (
-	listenAddress = kingpin.Flag("web.listen-address", "Address to listen on for web interface and telemetry.").Default(":2113").String()
+	listenAddress    = kingpin.Flag("web.listen-address", "Address to listen on for web interface and telemetry.").Default(":2113").String()
 	udpListenAddress = kingpin.Flag("udp.listen-address", "Address to listen on for web interface and telemetry.").Default(":2114").String()
-	redisAddress = kingpin.Flag("redis.address", "Address:Port of your redis-server.").Default("localhost:6379").String()
-	redisPassword = kingpin.Flag("redis.password", "Address:Port of your redis-server.").Default("pass").String()
-	redisDB = kingpin.Flag("redis.db", "Redis Database Number.").Default("0").String()
+	redisAddress     = kingpin.Flag("redis.address", "Address:Port of your redis-server.").Default("localhost:6379").String()
+	redisPassword    = kingpin.Flag("redis.password", "Address:Port of your redis-server.").Default("pass").String()
+	redisDB          = kingpin.Flag("redis.db", "Redis Database Number.").Default("0").String()
 	//configFile    = kingpin.Flag("config.file", "Path to configuration file.").Default("pjlink.yml").String()
-	logLevel      = kingpin.Flag("log.level", "LogLevel - Debug, Info, Warn, Error").Default("Debug").String()
+	logLevel = kingpin.Flag("log.level", "LogLevel - Debug, Info, Warn, Error").Default("Debug").String()
 
 	// Metrics about the PJLink exporter itself.
 	pjlinkDuration = prometheus.NewSummaryVec(
@@ -69,7 +66,7 @@ func init() {
 	prometheus.MustRegister(version.NewCollector("avcontrol_exporter"))
 }
 
-func handler(w http.ResponseWriter, r *http.Request, redisClient *redis.Client,  logger log.Logger) {
+func handler(w http.ResponseWriter, r *http.Request, redisClient *redis.Client, logger log.Logger) {
 	query := r.URL.Query()
 
 	target := query.Get("target")
@@ -120,8 +117,7 @@ func main() {
 	}
 
 	redisClient := RedisNewClient()
-	go UdpServer(context.Background(), *udpListenAddress, redisClient)	// Start UdpServer in a go routine
-
+	go UdpServer(context.Background(), *udpListenAddress, redisClient) // Start UdpServer in a go routine
 
 	/*if err := config.readConfig(*configFile); err != nil {
 		level.Error(logger).Log("msg", "Error reloading config", "err", err)

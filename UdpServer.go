@@ -135,7 +135,9 @@ func UdpServer(ctx context.Context, address string, redisClient *redis.Client) (
 
 				err := redisClient.HSet(ctx, host, msg, val).Err()
 				if err != nil {
-					panic(err)
+					// Continue, if redis is not responding
+					fmt.Println("Redis write timeout")
+					continue
 				}
 
 				fmt.Println("Written", host, msg, val)
